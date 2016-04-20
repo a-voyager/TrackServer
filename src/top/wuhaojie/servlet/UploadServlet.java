@@ -25,11 +25,9 @@ import java.util.List;
  */
 @WebServlet(name = "UploadServlet")
 public class UploadServlet extends HttpServlet {
+
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DiskFileItemFactory factory = new DiskFileItemFactory();
 
         ServletFileUpload servletFileUpload = new ServletFileUpload(factory);
@@ -70,6 +68,10 @@ public class UploadServlet extends HttpServlet {
                 System.out.print("大致剩余时间为" + leftTime + "秒");
 
                 System.out.println();
+
+                response.setHeader("percent", per + "%");
+
+
             }
 
         });
@@ -96,5 +98,8 @@ public class UploadServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 }
