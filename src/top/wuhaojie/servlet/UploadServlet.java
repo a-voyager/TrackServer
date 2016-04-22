@@ -10,10 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -28,9 +26,17 @@ public class UploadServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintWriter writer = response.getWriter();
+        writer.write("uploading...");
+        writer.flush();
+
         DiskFileItemFactory factory = new DiskFileItemFactory();
 
+        HttpSession session = request.getSession();
+
         ServletFileUpload servletFileUpload = new ServletFileUpload(factory);
+
+        servletFileUpload.setFileSizeMax(100 * 1024 * 1024);
 
         servletFileUpload.setProgressListener(new ProgressListener() {
             Long beginTime = System.currentTimeMillis();
@@ -69,10 +75,11 @@ public class UploadServlet extends HttpServlet {
 
                 System.out.println();
 
-                response.setHeader("percent", per + "%");
+                session.setAttribute("percent", per + "%");
 
 
             }
+
 
         });
 
