@@ -5,6 +5,9 @@ import org.apache.commons.fileupload.ProgressListener;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import top.wuhaojie.constant.Constant;
+import top.wuhaojie.entities.PointItem;
+import top.wuhaojie.utils.Converter;
+import top.wuhaojie.utils.DataDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -77,6 +80,26 @@ public class UploadServlet extends HttpServlet {
 
     private void dataOperation(String filePath, String fileName) {
         System.out.println("文件路径" + filePath + fileName);
+        File srcFile = new File(filePath + fileName);
+        try {
+            Converter converter = Converter.getConverter();
+            List<PointItem> pointItemList = converter.readXml(srcFile);
+            System.out.println("开始");
+            converter.setOnConverterChangedListener(() -> {
+                System.out.println("转换完成");
+            });
+            converter.xml2Gpx(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "gpx"));
+            converter.xml2Kml(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "kml"));
+
+            DataDao dataDao = DataDao.getInstance();
+            dataDao.setOnStatusChangedListener((deltaTime, eventMount) ->
+                    System.out.println("插入完成, 耗时" + deltaTime + ", 数量" + eventMount)
+            );
+            dataDao.insertNewPointList(pointItemList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

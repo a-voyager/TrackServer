@@ -99,7 +99,7 @@ public class Converter {
     }
 
 
-    private void xml2Kml(File srcFile, File desFile) throws Exception {
+    public void xml2Kml(File srcFile, File desFile) throws Exception {
         Document document = DocumentHelper.createDocument();
         Element kmlElement = document.addElement("kml");
         kmlElement.addAttribute("xmlns", "http://www.opengis.net/kml/2.2");
