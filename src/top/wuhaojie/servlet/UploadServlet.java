@@ -85,9 +85,7 @@ public class UploadServlet extends HttpServlet {
             Converter converter = Converter.getConverter();
             List<PointItem> pointItemList = converter.readXml(srcFile);
             System.out.println("开始");
-            converter.setOnConverterChangedListener(() -> {
-                System.out.println("转换完成");
-            });
+            converter.setOnConverterChangedListener(() -> System.out.println("转换完成"));
             converter.xml2Gpx(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "gpx"));
             converter.xml2Kml(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "kml"));
 

@@ -1,6 +1,7 @@
 package top.wuhaojie.utils;
 
 
+import top.wuhaojie.constant.Constant;
 import top.wuhaojie.entities.PointItem;
 
 import java.io.File;
@@ -25,9 +26,7 @@ public class DataDao {
     private DataDao() {
         Properties properties = new Properties(); // 读取配置文件
         try {
-            properties.load(new FileInputStream(new File(DataDao.class
-                    .getClassLoader().getResource("config.properties")
-                    .getPath())));
+            properties.load(new FileInputStream(new File(Constant.CONFIG_FILE_PATH)));
             System.out.println(properties.getProperty("SQLDriver"));
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();

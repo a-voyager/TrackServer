@@ -14,4 +14,5 @@ public interface Constant {
     String ATTR_FALSE = "false";
     String ATTR_TRUE = "true";
 
+    String CONFIG_FILE_PATH = "D://track_config.properties";
 }
