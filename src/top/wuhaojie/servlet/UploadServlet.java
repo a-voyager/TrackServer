@@ -66,7 +66,7 @@ public class UploadServlet extends HttpServlet {
                     }
                     System.out.println("写入文件完成！");
                     session.setAttribute(Constant.ATTR_UPLOADING, Constant.ATTR_FALSE);
-                    dataOperation(Constant.FILE_PATH, fileName);
+                    dataOperation(Constant.FILE_PATH, fileName, session);
                     is.close();
                     fos.close();
                 }
@@ -78,7 +78,7 @@ public class UploadServlet extends HttpServlet {
         }
     }
 
-    private void dataOperation(String filePath, String fileName) {
+    private void dataOperation(String filePath, String fileName, HttpSession session) {
         System.out.println("文件路径" + filePath + fileName);
         File srcFile = new File(filePath + fileName);
         try {
@@ -90,8 +90,17 @@ public class UploadServlet extends HttpServlet {
             converter.xml2Kml(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "kml"));
 
             DataDao dataDao = DataDao.getInstance();
-            dataDao.setOnStatusChangedListener((deltaTime, eventMount) ->
-                    System.out.println("插入完成, 耗时" + deltaTime + ", 数量" + eventMount)
+            dataDao.setOnStatusChangedListener(new DataDao.OnStatusChangedListener() {
+                                                   @Override
+                                                   public void onEventCompleted(long deltaTime, long eventMount) {
+                                                       System.out.println("插入完成, 耗时" + deltaTime + ", 数量" + eventMount);
+                                                   }
+
+                                                   @Override
+                                                   public void onProgress(long curr, long size) {
+                                                       session.setAttribute("ConvertMount", curr + "#" + size);
+                                                   }
+                                               }
             );
             dataDao.insertNewPointList(pointItemList);
 

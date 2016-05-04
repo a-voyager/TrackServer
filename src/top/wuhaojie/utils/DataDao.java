@@ -111,7 +111,8 @@ public class DataDao {
 
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO POINTS(id, latitude, longitude, height, currtime) " +
                 "VALUES (0, ?, ?, ?, ?);");
-
+        int size = itemList.size();
+        int i = 0;
         for (PointItem p : itemList) {
 
 //            System.out.println(p.time);
@@ -120,12 +121,14 @@ public class DataDao {
             preparedStatement.setString(3, p.height);
             preparedStatement.setString(4, p.time);
             preparedStatement.execute();
+            final int finalI = i;
+            listeners.forEach((l) -> l.onProgress(finalI, size));
+            i++;
 
         }
         closeStatement(preparedStatement);
 
         long deltaTime = System.currentTimeMillis() - lastTime;
-        int size = itemList.size();
         System.out.println("deltaTime" + deltaTime);
         listeners.forEach((l) -> l.onEventCompleted(deltaTime, size));
     }
@@ -160,7 +163,17 @@ public class DataDao {
     public static void main(String[] args) {
         try {
 //            List<PointItem> pointItems = Converter.getConverter().readXml(new File("data/test.xml"));
-            DataDao.getInstance().setOnStatusChangedListener((d, s) -> System.out.println(d + "----" + s));
+            DataDao.getInstance().setOnStatusChangedListener(new OnStatusChangedListener() {
+                @Override
+                public void onEventCompleted(long deltaTime, long eventMount) {
+
+                }
+
+                @Override
+                public void onProgress(long curr, long size) {
+
+                }
+            });
 //            DataDao.getInstance().insertNewPointList(pointItems);
 
             DataDao.getInstance().deleteAllPoints();
@@ -180,6 +193,8 @@ public class DataDao {
 
     public interface OnStatusChangedListener {
         void onEventCompleted(long deltaTime, long eventMount);
+
+        void onProgress(long curr, long size);
     }
 
     private List<OnStatusChangedListener> listeners = new ArrayList<>();

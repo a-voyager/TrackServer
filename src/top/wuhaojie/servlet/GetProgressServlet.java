@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 public class GetProgressServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String percent = (String) session.getAttribute("percent");
+        String percent = (String) session.getAttribute("ConvertMount");
         PrintWriter writer = response.getWriter();
         writer.print(percent);
         writer.flush();
