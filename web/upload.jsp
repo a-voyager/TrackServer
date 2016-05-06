@@ -7,6 +7,7 @@
 <head>
 </head>
 <body>
+<img src="imgs/backgroud.png">
 <h1>文件上传</h1>
 <hr>
 <form id="form" action="/upload" method="post" enctype="multipart/form-data">
@@ -37,5 +38,5 @@
     }
 
 </script>
-
+</body>
 </html>
