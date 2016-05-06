@@ -16,10 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -32,9 +29,14 @@ import java.util.List;
 public class UploadServlet extends HttpServlet {
 
 
+    private PrintWriter writer;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+
+        writer = response.getWriter();
 
         ConfigUtils.saveConfig(Constant.CONFIG_FINISHED, Constant.ATTR_FALSE);
 
@@ -43,6 +45,9 @@ public class UploadServlet extends HttpServlet {
         HttpSession session = receivingFile.getSession();
 
         writeFile(request, servletFileUpload, session);
+        response.setHeader("refresh", "3;url=" + request.getContextPath() + "/upload.jsp");
+        writer.flush();
+        writer.close();
     }
 
     private void writeFile(HttpServletRequest request, ServletFileUpload servletFileUpload, HttpSession session) {
@@ -55,7 +60,7 @@ public class UploadServlet extends HttpServlet {
                         session.setAttribute(Constant.ATTR_FILE_NAME, item.getName());
                         fileName = item.getName();
                         System.out.println(item.getName());
-                        ConfigUtils.saveConfig(Constant.CONFIG_FINISHED_FILE_PATH, Constant.FILE_PATH + fileName);
+                        ConfigUtils.saveConfig(Constant.CONFIG_FINISHED_FILE_PATH, Constant.FILE_PATH + fileName.replace(".xml", ".kml"));
                     }
                     InputStream is = item.getInputStream();
                     File file = new File(Constant.FILE_PATH + fileName);
@@ -70,6 +75,7 @@ public class UploadServlet extends HttpServlet {
                     }
                     System.out.println("写入文件完成！");
                     session.setAttribute(Constant.ATTR_UPLOADING, Constant.ATTR_FALSE);
+                    writer.println("服务器已收到文件，即将进行处理...<br>");
                     dataOperation(Constant.FILE_PATH, fileName, session);
                     is.close();
                     fos.close();
@@ -89,6 +95,7 @@ public class UploadServlet extends HttpServlet {
             Converter converter = Converter.getConverter();
             List<PointItem> pointItemList = converter.readXml(srcFile);
             System.out.println("开始");
+            writer.println("开始进行数据处理...<br>");
             converter.setOnConverterChangedListener(() -> {
                 System.out.println("转换完成");
                 ConfigUtils.saveConfig(Constant.CONFIG_FINISHED, Constant.ATTR_TRUE);
@@ -97,11 +104,15 @@ public class UploadServlet extends HttpServlet {
             converter.xml2Gpx(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "gpx"));
             converter.xml2Kml(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "kml"));
 
+            writer.println("正在保存数据...请稍候...<br>");
+
             DataDao dataDao = DataDao.getInstance();
             dataDao.setOnStatusChangedListener(new DataDao.OnStatusChangedListener() {
                                                    @Override
                                                    public void onEventCompleted(long deltaTime, long eventMount) {
                                                        System.out.println("插入完成, 耗时" + deltaTime + ", 数量" + eventMount);
+                                                       writer.println("保存数据完成，耗时" + deltaTime / 1000 + "秒");
+                                                       writer.println("完成所有操作，即将返回主页...<br>");
                                                    }
 
                                                    @Override

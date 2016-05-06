@@ -19,9 +19,14 @@ import java.io.*;
  */
 @WebServlet(name = "DownloadServlet")
 public class DownloadServlet extends HttpServlet {
+
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!Constant.ATTR_TRUE.equals(ConfigUtils.readConfig(Constant.CONFIG_FINISHED)))
+        if (!Constant.ATTR_TRUE.equals(ConfigUtils.readConfig(Constant.CONFIG_FINISHED))) {
             response.sendError(0, "NOT PREPARED FILE");
+            response.setHeader("refresh", "3;url=" + request.getContextPath() + "/upload.jsp");
+        }
+
         ServletOutputStream outputStream = response.getOutputStream();
         BufferedOutputStream bos = new BufferedOutputStream(outputStream);
         String filePath = ConfigUtils.readConfig(Constant.CONFIG_FINISHED_FILE_PATH);
@@ -40,6 +45,7 @@ public class DownloadServlet extends HttpServlet {
         bos.flush();
         bos.close();
         bis.close();
+
 
     }
 
