@@ -15,4 +15,6 @@ public interface Constant {
     String ATTR_TRUE = "true";
 
     String CONFIG_FILE_PATH = "D://track_config.properties";
+    String CONFIG_FINISHED = "finished";
+    String CONFIG_FINISHED_FILE_PATH = "fileName";
 }

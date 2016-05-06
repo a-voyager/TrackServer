@@ -6,6 +6,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import top.wuhaojie.constant.Constant;
 import top.wuhaojie.entities.PointItem;
+import top.wuhaojie.utils.ConfigUtils;
 import top.wuhaojie.utils.Converter;
 import top.wuhaojie.utils.DataDao;
 
@@ -35,6 +36,8 @@ public class UploadServlet extends HttpServlet {
 
         response.setCharacterEncoding("utf-8");
 
+        ConfigUtils.saveConfig(Constant.CONFIG_FINISHED, Constant.ATTR_FALSE);
+
         ReceivingFile receivingFile = new ReceivingFile(request).invoke();
         ServletFileUpload servletFileUpload = receivingFile.getServletFileUpload();
         HttpSession session = receivingFile.getSession();
@@ -52,6 +55,7 @@ public class UploadServlet extends HttpServlet {
                         session.setAttribute(Constant.ATTR_FILE_NAME, item.getName());
                         fileName = item.getName();
                         System.out.println(item.getName());
+                        ConfigUtils.saveConfig(Constant.CONFIG_FINISHED_FILE_PATH, Constant.FILE_PATH + fileName);
                     }
                     InputStream is = item.getInputStream();
                     File file = new File(Constant.FILE_PATH + fileName);
@@ -85,7 +89,11 @@ public class UploadServlet extends HttpServlet {
             Converter converter = Converter.getConverter();
             List<PointItem> pointItemList = converter.readXml(srcFile);
             System.out.println("开始");
-            converter.setOnConverterChangedListener(() -> System.out.println("转换完成"));
+            converter.setOnConverterChangedListener(() -> {
+                System.out.println("转换完成");
+                ConfigUtils.saveConfig(Constant.CONFIG_FINISHED, Constant.ATTR_TRUE);
+
+            });
             converter.xml2Gpx(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "gpx"));
             converter.xml2Kml(srcFile, new File(filePath + fileName.substring(0, fileName.length() - 3) + "kml"));
 
