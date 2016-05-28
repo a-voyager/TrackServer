@@ -27,9 +27,24 @@ public class DownloadServlet extends HttpServlet {
             response.setHeader("refresh", "3;url=" + request.getContextPath() + "/upload.jsp");
         }
 
+
+        String filePostfix = ".kml";
+        switch (request.getHeader(Constant.FILE_TYPE_HEADER)) {
+            case Constant.KML:
+                filePostfix = ".kml";
+                break;
+            case Constant.XML:
+                filePostfix = ".xml";
+                break;
+            case Constant.GPX:
+                filePostfix = ".gpx";
+                break;
+        }
+
+
         ServletOutputStream outputStream = response.getOutputStream();
         BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-        String filePath = ConfigUtils.readConfig(Constant.CONFIG_FINISHED_FILE_PATH);
+        String filePath = ConfigUtils.readConfig(Constant.CONFIG_FINISHED_FILE_PATH_WITH_OUT_POSTFIX) + filePostfix;
         File file = new File(filePath);
         String fileName = file.getName();
         response.setCharacterEncoding("utf-8");

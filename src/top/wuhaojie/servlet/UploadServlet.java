@@ -60,7 +60,9 @@ public class UploadServlet extends HttpServlet {
                         session.setAttribute(Constant.ATTR_FILE_NAME, item.getName());
                         fileName = item.getName();
                         System.out.println(item.getName());
-                        ConfigUtils.saveConfig(Constant.CONFIG_FINISHED_FILE_PATH, Constant.FILE_PATH + fileName.replace(".xml", ".kml"));
+//                        ConfigUtils.saveConfig(Constant.CONFIG_FINISHED_FILE_PATH_WITH_OUT_POSTFIX, Constant.FILE_PATH + fileName.replace(".xml", ".kml"));
+                        // 取消固定格式
+                        ConfigUtils.saveConfig(Constant.CONFIG_FINISHED_FILE_PATH_WITH_OUT_POSTFIX, Constant.FILE_PATH + fileName.replace(".xml", ""));
                     }
                     InputStream is = item.getInputStream();
                     File file = new File(Constant.FILE_PATH + fileName);
