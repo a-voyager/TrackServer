@@ -7,16 +7,16 @@ package top.wuhaojie.constant;
  * Version: 1.0
  */
 public interface Constant {
-    //    String FILE_PATH = "/home/data/";
-    String FILE_PATH = "D://test/";
+        String FILE_PATH = "/home/data/";
+//    String FILE_PATH = "D://test/";
 
     String ATTR_FILE_NAME = "FileName";
     String ATTR_UPLOADING = "isUploading";
     String ATTR_FALSE = "false";
     String ATTR_TRUE = "true";
 
-    //    String CONFIG_FILE_PATH = "/home/track_config.properties";
-    String CONFIG_FILE_PATH = "D://track_config.properties";
+        String CONFIG_FILE_PATH = "/home/track_config.properties";
+//    String CONFIG_FILE_PATH = "D://track_config.properties";
     String CONFIG_FINISHED = "finished";
     String CONFIG_FINISHED_FILE_PATH_WITH_OUT_POSTFIX = "fileName";
 

@@ -9,7 +9,7 @@
 <style>
 
     * {
-        font-family: "微软雅黑 Light";
+        font-family: "微软雅黑 Light", "微软雅黑";
     }
 
     div.card {
