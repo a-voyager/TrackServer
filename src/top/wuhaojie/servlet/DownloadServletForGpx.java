@@ -18,7 +18,7 @@ import java.io.*;
  * Version: 1.0
  */
 @WebServlet(name = "DownloadServlet")
-public class DownloadServlet extends HttpServlet {
+public class DownloadServletForGpx extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,10 +28,7 @@ public class DownloadServlet extends HttpServlet {
         }
 
 
-        String filePostfix = getFilePostfix(request.getHeader(Constant.FILE_TYPE_HEADER));
-//        // 如果没改变或者为空 说明是浏览器端访问的
-//        if (filePostfix.isEmpty() || filePostfix.equals(".kml"))
-//            filePostfix = getFilePostfix((String) request.getSession().getAttribute(Constant.FILE_TYPE_HEADER));
+        String filePostfix = ".gpx";
 
 
         ServletOutputStream outputStream = response.getOutputStream();
@@ -56,22 +53,6 @@ public class DownloadServlet extends HttpServlet {
 
     }
 
-    private String getFilePostfix(String headerValue) {
-        String filePostfix = ".kml";
-        if (headerValue == null || headerValue.isEmpty()) return filePostfix;
-        switch (headerValue) {
-            case Constant.KML:
-                filePostfix = ".kml";
-                break;
-            case Constant.XML:
-                filePostfix = ".xml";
-                break;
-            case Constant.GPX:
-                filePostfix = ".gpx";
-                break;
-        }
-        return filePostfix;
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);

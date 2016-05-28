@@ -19,6 +19,18 @@
         <servlet-name>download</servlet-name>
         <servlet-class>top.wuhaojie.servlet.DownloadServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>download-gpx</servlet-name>
+        <servlet-class>top.wuhaojie.servlet.DownloadServletForGpx</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>download-xml</servlet-name>
+        <servlet-class>top.wuhaojie.servlet.DownloadServletForXml</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>download-kml</servlet-name>
+        <servlet-class>top.wuhaojie.servlet.DownloadServletForKml</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>upload</servlet-name>
@@ -31,6 +43,18 @@
     <servlet-mapping>
         <servlet-name>download</servlet-name>
         <url-pattern>/download</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>download-gpx</servlet-name>
+        <url-pattern>/download-gpx</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>download-xml</servlet-name>
+        <url-pattern>/download-xml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>download-kml</servlet-name>
+        <url-pattern>/download-kml</url-pattern>
     </servlet-mapping>
 
 </web-app>
